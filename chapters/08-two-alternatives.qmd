@@ -1,0 +1,67 @@
+# Comparing Two Alternatives
+
+This is the single most common pattern in CS empirical work: *"Is system A
+faster/better than system B?"*
+
+## Independent Samples: Welch's t-test
+
+When two groups are independent (different runs, different subjects), use
+Welch's t-test, which does *not* assume equal variances. It is the default in
+R.
+
+```r
+set.seed(1)
+A <- rnorm(30, mean = 100, sd = 10)
+B <- rnorm(30, mean = 105, sd = 14)
+
+t.test(A, B)
+```
+
+Output reports:
+
+- `t` statistic and degrees of freedom
+- `p-value`
+- 95% CI for the *difference of means*
+
+## Paired Data
+
+If the same subjects (or benchmarks, or inputs) are measured under both
+conditions, the paired t-test is more powerful because it removes
+between-subject variance.
+
+```r
+baseline  <- c(120, 95, 200, 60, 150, 180, 75, 110, 130, 95, 210, 88)
+optimized <- baseline * runif(12, 0.7, 0.95)
+
+t.test(optimized, baseline, paired = TRUE)
+```
+
+A paired design is almost always the right choice when comparing two
+algorithms on the same set of benchmarks.
+
+## Effect Size: Cohen's d
+
+The p-value tells you whether an effect exists; the effect size tells you
+whether it matters.
+
+```r
+library(effsize)
+cohen.d(A, B)
+```
+
+Conventions: 0.2 small, 0.5 medium, 0.8 large. These are rough --- interpret
+in your domain.
+
+## Assumptions
+
+The t-test assumes approximate normality of the *sampling distribution of the
+mean* (CLT helps for n ≥ ~30) and, for the classical version, equal
+variances. Check with diagnostics:
+
+```r
+qqnorm(A); qqline(A)
+shapiro.test(A)
+var.test(A, B)
+```
+
+If assumptions fail badly, move to the non-parametric tests in @sec-np.

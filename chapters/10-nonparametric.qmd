@@ -1,0 +1,71 @@
+# Non-Parametric Tests {#sec-np}
+
+Non-parametric tests do not assume a specific distribution. They work on
+**ranks** instead of raw values, which makes them robust to outliers and
+skew --- useful for latency, memory, and other CS quantities
+[@arcuri2014hitchhiker].
+
+## Mann–Whitney U (Wilcoxon Rank-Sum)
+
+The non-parametric counterpart to the independent-samples t-test.
+
+```r
+wilcox.test(A, B, conf.int = TRUE)
+```
+
+It tests whether one distribution tends to produce larger values than the
+other (stochastic dominance), not equality of medians per se.
+
+## Wilcoxon Signed-Rank
+
+Paired counterpart of the paired t-test.
+
+```r
+wilcox.test(optimized, baseline, paired = TRUE, conf.int = TRUE)
+```
+
+## Kruskal–Wallis
+
+Non-parametric one-way ANOVA.
+
+```r
+kruskal.test(latency ~ scheduler, data = data)
+```
+
+If significant, follow up with pairwise Wilcoxon with adjustment:
+
+```r
+pairwise.wilcox.test(data$latency, data$scheduler,
+                     p.adjust.method = "holm")
+```
+
+## Permutation Tests
+
+Conceptually the cleanest non-parametric idea: under $H_0$, group labels are
+exchangeable. Shuffle them many times and see how often a statistic at least
+as extreme as the observed one arises.
+
+```r
+perm_test <- function(x, y, R = 10000) {
+  obs <- mean(x) - mean(y)
+  combined <- c(x, y)
+  n1 <- length(x)
+  stats <- replicate(R, {
+    idx <- sample(length(combined))
+    mean(combined[idx[1:n1]]) -
+      mean(combined[idx[(n1+1):length(combined)]])
+  })
+  mean(abs(stats) >= abs(obs))
+}
+perm_test(A, B)
+```
+
+## Effect Sizes for Non-Parametric Tests
+
+```r
+library(effsize)
+cliff.delta(A, B)
+```
+
+`cliff.delta` is the recommended effect size in non-parametric CS
+comparisons.

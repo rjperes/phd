@@ -1,0 +1,56 @@
+# Descriptive Statistics and Exploratory Data Analysis
+
+## Central Tendency
+
+- **Arithmetic mean**: appropriate for additive quantities (counts, bytes).
+- **Median**: robust to outliers; preferred for latency distributions.
+- **Geometric mean**: the *only* correct way to average ratios or speedups
+  [@fleming1986not].
+
+```r
+speedups <- c(1.5, 2.0, 0.8, 3.0, 1.2)
+mean(speedups)                    # arithmetic
+exp(mean(log(speedups)))          # geometric ~ 1.49
+median(speedups)
+```
+
+If you average speedups arithmetically across benchmarks, a reviewer with
+experience will flag it.
+
+## Dispersion
+
+- Variance, standard deviation: for normally distributed data.
+- Interquartile range (IQR): robust.
+- Median absolute deviation (MAD): robust scale estimate.
+
+```r
+x <- rgamma(1000, shape = 2, rate = 0.5)
+c(sd = sd(x), iqr = IQR(x), mad = mad(x))
+```
+
+## Visualizing One Variable
+
+```r
+library(ggplot2)
+x <- rlnorm(500, meanlog = 0, sdlog = 1)
+ggplot(data.frame(x = x), aes(x)) +
+  geom_histogram(bins = 40, fill = "steelblue", colour = "white") +
+  scale_x_log10() +
+  labs(title = "Latency distribution (log scale)",
+       x = "latency (ms)", y = "count")
+```
+
+Always inspect the distribution before computing a mean. Latency, memory, and
+file-size distributions in CS are almost never normal --- they are typically
+log-normal or heavy-tailed.
+
+## Visualizing Two Variables
+
+Scatter plots, box-plots by group, and violin plots reveal what summary
+statistics hide.
+
+```r
+ggplot(df, aes(system, latency)) +
+  geom_violin(fill = "lightgray") +
+  geom_jitter(width = 0.05, alpha = 0.6)
+```

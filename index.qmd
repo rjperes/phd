@@ -1,0 +1,41 @@
+# Preface {.unnumbered}
+
+This book is written for the PhD student in computer science who has
+discovered, often the hard way, that building a system is only half the work.
+The other half is showing --- rigorously, defensibly, and reproducibly --- that
+the system *does what you claim it does*, that the effect you observed is *not
+just noise*, and that your results *generalize beyond the laptop on which they
+were measured*.
+
+Computer science has matured from a discipline where "it works on my machine"
+was an acceptable result to one where empirical claims are scrutinized with
+the same statistical rigor as in psychology, medicine, or physics. Top-tier
+venues (SIGMETRICS, ICSE, OSDI, NeurIPS, CHI, MICRO) routinely expect
+confidence intervals, effect sizes, significance tests, and pre-registered
+protocols. Reviewers reject papers that report a single mean as if it were
+the truth.
+
+The goal of this book is to give you the conceptual vocabulary and the
+practical tooling --- using **R** throughout --- to perform credible
+quantitative research. We avoid the trap of "statistics as a cookbook."
+Instead, each technique is motivated by a recurring CS research question:
+How fast is my new algorithm? Does my compiler optimization help? Is the bug
+rate of language A higher than language B? Does treatment X improve user task
+completion?
+
+All datasets in the examples are synthetic but realistic, and all code is
+self-contained and runnable in a standard R installation.
+
+## How to read this book
+
+The early chapters (1--7) build the conceptual foundation: measurement,
+description, distributions, intervals, and the logic of hypothesis testing.
+Chapters 8--13 cover the workhorse techniques: comparing two or more
+alternatives, non-parametric tests, contingency tables, and regression.
+Chapters 14--19 are about *doing* research: planning sample sizes, designing
+experiments, benchmarking systems, reproducibility, reporting, and avoiding
+the pitfalls that get papers rejected. Chapter 20 is a reference appendix.
+
+If you are in a hurry, read Chapters 6 (confidence intervals), 8 (comparing
+two alternatives), 14 (effect sizes and power), 16 (benchmarking), and 19
+(pitfalls). They will pay for themselves before your next submission deadline.

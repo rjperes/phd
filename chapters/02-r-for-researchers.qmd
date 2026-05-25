@@ -1,0 +1,71 @@
+# A Working Knowledge of R for Researchers
+
+R is not a general-purpose language, and that is its strength. It was built by
+statisticians for data analysis, and almost every classical and modern method
+you will need is one `install.packages()` away.
+
+## Installing and Starting
+
+Install R from CRAN, then install RStudio (or use VS Code). For this book,
+install:
+
+```r
+install.packages(c(
+  "tidyverse", "ggplot2", "dplyr", "readr",
+  "boot", "car", "effsize", "pwr", "MASS",
+  "broom", "knitr", "rmarkdown", "microbenchmark"
+))
+```
+
+## The Vector Is the Atom
+
+Almost everything in R is a vector. A "scalar" is just a vector of length one.
+
+```r
+latencies <- c(12.3, 11.9, 13.7, 12.1, 15.0)
+mean(latencies)        # 13.0
+sd(latencies)          # 1.27
+length(latencies)      # 5
+latencies[latencies > 12]
+```
+
+## Data Frames
+
+A data frame is a table where columns can be different types.
+
+```r
+df <- data.frame(
+  system  = rep(c("A", "B"), each = 5),
+  latency = c(12.3, 11.9, 13.7, 12.1, 15.0,
+              10.1, 10.5,  9.8, 11.2, 10.0)
+)
+aggregate(latency ~ system, data = df, FUN = mean)
+```
+
+## The Tidyverse Idiom
+
+```r
+library(dplyr)
+df |>
+  group_by(system) |>
+  summarise(mean_lat = mean(latency),
+            sd_lat   = sd(latency),
+            n        = n())
+```
+
+## Reading Data
+
+```r
+library(readr)
+runs <- read_csv("experiment_runs.csv")
+```
+
+## Reproducibility From Day One
+
+Set a seed for any random procedure, record `sessionInfo()` in your artifacts,
+and prefer scripts over interactive sessions.
+
+```r
+set.seed(20260525)
+sessionInfo()
+```

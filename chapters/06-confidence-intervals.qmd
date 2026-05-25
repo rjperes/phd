@@ -1,0 +1,53 @@
+# Confidence Intervals
+
+A confidence interval (CI) is the most useful single object in applied
+statistics. It says: *"with method M, repeated over many studies, the
+interval would cover the true parameter X% of the time."*
+
+## CI for a Mean
+
+For approximately normal data or large *n*:
+
+$$\bar{x} \pm t_{\alpha/2,\,n-1} \cdot \frac{s}{\sqrt{n}}$$
+
+```r
+x <- rnorm(40, mean = 100, sd = 15)
+t.test(x)$conf.int               # 95% CI by default
+t.test(x, conf.level = 0.99)$conf.int
+```
+
+## CI for a Proportion
+
+Use the Wilson interval (better than Wald, especially near 0 or 1):
+
+```r
+prop.test(47, 50)$conf.int
+binom.test(47, 50)$conf.int
+```
+
+## The Bootstrap: When Theory Is Hard
+
+The bootstrap [@efron1979bootstrap] constructs a sampling distribution by
+resampling with replacement from your data. It is the workhorse for any
+statistic without a clean analytical CI --- including the geometric mean, the
+median, a ratio of medians, etc.
+
+```r
+library(boot)
+speedups <- c(1.5, 2.0, 0.8, 3.0, 1.2, 1.8, 2.4, 0.9, 1.1, 1.6)
+
+geo_mean <- function(d, i) exp(mean(log(d[i])))
+
+b <- boot(speedups, geo_mean, R = 5000)
+boot.ci(b, type = c("perc", "bca"))
+```
+
+`bca` (bias-corrected and accelerated) is generally the most accurate.
+
+## Reporting
+
+Always pair a point estimate with an interval:
+
+> Mean latency was 12.4 ms (95% CI: 11.8–13.1, n = 30).
+
+A point estimate without an interval is a half-truth.
