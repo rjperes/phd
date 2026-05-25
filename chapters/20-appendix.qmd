@@ -1,0 +1,42 @@
+# Appendix: An R Reference for the Researcher
+
+## Tests Quick Reference
+
+| Goal | Parametric | Non-parametric | Categorical |
+|------|------------|----------------|-------------|
+| Two indep. groups | `t.test(x, y)` | `wilcox.test(x, y)` | `chisq.test`, `fisher.test` |
+| Two paired groups | `t.test(x, y, paired = TRUE)` | `wilcox.test(..., paired = TRUE)` | `mcnemar.test` |
+| > 2 groups | `aov(y ~ g)` | `kruskal.test(y ~ g)` | `chisq.test` |
+| Repeated measures | `lme4::lmer` | `friedman.test` | --- |
+| Association (numeric) | `cor.test(x, y)` | `cor.test(..., method = "spearman")` | --- |
+| Modeling | `lm`, `glm`, `lmer` | regression on ranks | logistic regression |
+
+## Confidence Interval Quick Reference
+
+```r
+t.test(x)$conf.int
+prop.test(k, n)$conf.int
+wilcox.test(x, conf.int = TRUE)$conf.int
+boot.ci(boot(x, stat, R = 5000), type = "bca")
+```
+
+## Reproducibility Snippet
+
+```r
+set.seed(20260525)
+writeLines(capture.output(sessionInfo()), "sessionInfo.txt")
+```
+
+## Recommended Further Reading
+
+- @wasserman2004all --- one-volume rigorous reference.
+- @gelman2020regression --- modern applied perspective.
+- @jain1991art --- the CS classic.
+- @georges2007rigorous --- rigorous Java performance evaluation.
+- @arcuri2014hitchhiker --- stats for randomized algorithms in SE.
+- @wasserstein2016asa --- ASA statement on p-values.
+- @wickham2017r4ds --- tidyverse entry point.
+
+## A Closing Word
+
+Statistics is a craft. The tests are tools, not rituals. Ask: what claim am I trying to support, and what evidence would convince a skeptical reader? Answer it with pre-registered designs, honest measurements, effect sizes, confidence intervals, and reproducible R scripts.

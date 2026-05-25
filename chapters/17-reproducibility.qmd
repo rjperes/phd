@@ -1,0 +1,25 @@
+# Reproducibility, Pre-registration, and Open Science
+
+A PhD whose results cannot be reproduced is a PhD whose results do not exist.
+
+## The Reproducibility Stack
+
+1. **Data**: raw observations stored, versioned.
+2. **Code**: scripts in version control, deterministic seeds.
+3. **Environment**: containerized (Docker, Nix, Apptainer).
+4. **Documentation**: a README that lets a stranger replicate in under an hour.
+
+## R-Specific Tools
+
+- `renv` for project-local package versions.
+- R Markdown / Quarto for literate, executable reports.
+- `targets` for reproducible analysis pipelines.
+- `sessionInfo()` captured at the end of every analysis.
+
+## Pre-registration
+
+Publicly document, *before data collection*, your hypotheses, design, sample size, and analysis plan (e.g., osf.io). The single most effective antidote to p-hacking and HARKing.
+
+## Artifact Evaluation
+
+ACM and many conferences badge artifacts. Plan for it from day one.

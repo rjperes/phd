@@ -1,0 +1,52 @@
+# Benchmarking and Performance Evaluation
+
+CS performance evaluation is a discipline of its own [@jain1991art; @georges2007rigorous].
+
+## Warm-Up
+
+JITs, caches, branch predictors, and TLBs all learn. Discard early iterations or report cold vs. steady state.
+
+## Geometric Mean for Speedup
+
+```r
+speedups <- c(1.20, 0.95, 1.45, 1.10, 0.80, 1.30)
+exp(mean(log(speedups)))
+```
+
+## Reporting Distributions
+
+Show violin plots or CDFs, especially for tail latency.
+
+## Worked Example
+
+```r
+library(dplyr); library(ggplot2); library(boot)
+
+set.seed(7)
+n <- 30
+df <- data.frame(
+  bench  = rep(paste0("b", 1:10), each = 2 * n),
+  system = rep(rep(c("base", "new"), each = n), times = 10),
+  time   = c(replicate(10, c(rlnorm(n, log(100), 0.15),
+                              rlnorm(n, log( 88), 0.15))))
+)
+
+per_bench <- df |>
+  group_by(bench, system) |>
+  summarise(med = median(time), .groups = "drop") |>
+  tidyr::pivot_wider(names_from = system, values_from = med) |>
+  mutate(speedup = base / new)
+
+wilcox.test(log(per_bench$base), log(per_bench$new), paired = TRUE)
+
+gm <- function(d, i) exp(mean(log(d[i])))
+b <- boot(per_bench$speedup, gm, R = 5000)
+boot.ci(b, type = "bca")
+```
+
+## Beware of
+
+- Reporting only the mean of a heavy-tailed distribution.
+- Comparing across heterogeneous hardware.
+- Cherry-picking benchmark subsets.
+- Inferring causation from a single configuration change without A/B switch-back.

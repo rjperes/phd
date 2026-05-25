@@ -1,0 +1,62 @@
+# Categorical Data and Contingency Tables
+
+When your variables are categorical (pass/fail, language, defect type), counts in a table are the data.
+
+## A 2x2 Example
+
+Do tests pass at the same rate under two test-generation tools?
+
+```r
+tbl <- matrix(c(82, 18,
+                70, 30),
+              nrow = 2, byrow = TRUE,
+              dimnames = list(tool = c("A", "B"),
+                              outcome = c("pass", "fail")))
+chisq.test(tbl)
+```
+
+For 2x2 tables with small expected counts (any expected < 5), use Fisher's exact test:
+
+```r
+fisher.test(tbl)
+```
+
+## Larger Contingency Tables
+
+```r
+tbl3 <- matrix(c(50, 30, 20,
+                 40, 35, 25,
+                 30, 40, 30),
+               nrow = 3, byrow = TRUE,
+               dimnames = list(language = c("Java", "Python", "Rust"),
+                               severity = c("low", "med", "high")))
+chisq.test(tbl3)
+```
+
+## Effect Size: Cramer's V
+
+```r
+chi <- chisq.test(tbl3)
+n   <- sum(tbl3)
+k   <- min(nrow(tbl3), ncol(tbl3))
+V   <- sqrt(chi$statistic / (n * (k - 1)))
+V
+```
+
+Rules of thumb: 0.1 small, 0.3 medium, 0.5 large.
+
+## McNemar's Test for Paired Categorical Data
+
+```r
+m <- matrix(c(40, 12,
+               5, 43),
+            nrow = 2, byrow = TRUE)
+mcnemar.test(m)
+```
+
+## Goodness-of-Fit
+
+```r
+observed <- c(95, 110, 105, 90, 100)
+chisq.test(observed)        # H0: uniform
+```

@@ -1,0 +1,51 @@
+# Multiple Regression and Model Selection
+
+$$y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \dots + \beta_p x_p + \varepsilon$$
+
+```r
+set.seed(3)
+n <- 100
+df <- data.frame(
+  loc        = rpois(n, 200),
+  complexity = rpois(n, 15),
+  team_size  = rpois(n,  6)
+)
+df$bugs <- with(df,
+  0.01 * loc + 0.3 * complexity - 0.5 * team_size + rnorm(n, 0, 2))
+
+fit <- lm(bugs ~ loc + complexity + team_size, data = df)
+summary(fit)
+```
+
+## Multicollinearity
+
+```r
+library(car)
+vif(fit)
+```
+
+## Interactions
+
+```r
+fit_int <- lm(bugs ~ loc * complexity + team_size, data = df)
+summary(fit_int)
+```
+
+## Model Selection
+
+Avoid stepwise selection on p-values. Prefer theory-driven selection, cross-validation, or AIC/BIC.
+
+```r
+AIC(fit, fit_int)
+```
+
+## Beyond OLS
+
+- Logistic regression for binary outcomes.
+- Poisson / negative binomial for counts.
+- Mixed-effects models (`lme4::lmer`) when observations cluster.
+
+```r
+df$crash <- rbinom(nrow(df), 1, plogis(-3 + 0.01 * df$loc))
+glm(crash ~ loc, data = df, family = binomial) |> summary()
+```
