@@ -1,7 +1,7 @@
 :root {
   color-scheme: light;
   --ink: #18283a;
-  --muted: #667789;
+  --muted: #506175;
   --blue: #3276b8;
   --blue-dark: #1f568b;
   --blue-pale: #eaf2fa;
@@ -268,6 +268,7 @@ h3 {
 .portrait-card img {
   display: block;
   width: 100%;
+  height: auto;
   aspect-ratio: 1;
   border-radius: 6px;
   object-fit: cover;
@@ -346,7 +347,7 @@ h3 {
 .credential-label,
 .credentials strong span {
   display: block;
-  color: #7a8998;
+  color: #506175;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.8px;
@@ -548,7 +549,7 @@ h3 {
 }
 
 .resource-link small {
-  color: #758597;
+  color: #506175;
   font-size: 10px;
 }
 
@@ -654,7 +655,7 @@ h3 {
 
 .site-footer p {
   margin: 0;
-  color: #7b8997;
+  color: #506175;
   font-size: 11px;
 }
 
